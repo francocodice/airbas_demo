@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserBasDetailRepository extends JpaRepository<UserBasDetail, Long> {
     UserBasDetail findByUserbas(UserBas userbas);
+    UserBasDetail findByUserbasId(Long id);
 }

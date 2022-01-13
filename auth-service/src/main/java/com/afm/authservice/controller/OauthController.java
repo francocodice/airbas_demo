@@ -49,7 +49,7 @@ public class OauthController {
 
 
     @PostMapping("/google")
-    public ResponseEntity<?> google(@RequestBody TokenDto tokenGoogle) throws IOException {
+    public ResponseEntity<?> google(@RequestBody TokenDto tokenGoogle) throws Exception {
         final NetHttpTransport netHttpTransport = new NetHttpTransport();
         final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
@@ -72,7 +72,7 @@ public class OauthController {
     }
 
     @PostMapping("/facebook")
-    public ResponseEntity<?> facebook(@RequestBody TokenDto tokenFacebook) throws IOException {
+    public ResponseEntity<?> facebook(@RequestBody TokenDto tokenFacebook) throws Exception {
         System.out.println("facebook method");
         Facebook facebook = new FacebookTemplate(tokenFacebook.getValue());
         final String [] fields = {"email", "name"};
@@ -91,7 +91,7 @@ public class OauthController {
 
 
     @PostMapping("/amazon")
-    public ResponseEntity<?> amazon(@RequestBody TokenDto tokenAmazon) throws IOException {
+    public ResponseEntity<?> amazon(@RequestBody TokenDto tokenAmazon) throws IOException, Exception {
         HttpGet request = new HttpGet("https://api.amazon.com/user/profile");
         request.addHeader("Authorization", "bearer " + tokenAmazon.getValue());
 
@@ -108,9 +108,7 @@ public class OauthController {
             authenticationService.createUser(credentials, AuthProvider.amazon);
         }
 
-
         String jwt = authenticationService.authenticateUser(new LoginRequest(detailUser.get("email"), pswExtUser));
-
         TokenDto tokenDto = new TokenDto();
         tokenDto.setValue(jwt);
         return new ResponseEntity(tokenDto, HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.afm.authservice.service;
 
+import com.afm.authservice.exception.UsernameNotFoundException;
 import com.afm.authservice.repository.UserBasRepository;
 import com.afm.authservice.security.JWTAuthenticationManager;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import model.utils.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +35,25 @@ public class AuthenticationService {
     private final JWTAuthenticationManager jwtAuthenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public String authenticateUser(LoginRequest credentials) throws UsernameNotFoundException,
+            BadCredentialsException {
 
-    public List<UserBas> findAll(){
-        return userBasRepository.findAll();
+        if (findUser(credentials.getEmail()) == null)
+            throw new UsernameNotFoundException("Email - " + credentials.getEmail());
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    credentials.getEmail(),
+                    credentials.getPassword()));
+        }catch (UsernameNotFoundException e){
+            throw new BadCredentialsException("Invalid Credentials - Password not valid");
+        }
+        return jwtAuthenticationManager.generateJwtToken(credentials.getEmail());
     }
 
-    public UserBas createUser(LoginRequest request, AuthProvider provider){
+    public UserBas createUser(LoginRequest request, AuthProvider provider) throws Exception {
         if (userBasRepository.findByEmail(request.getEmail()) != null)
-            throw new IllegalArgumentException("Email already exists");
+            throw new Exception("Email already exists");
 
         UserBas newUser = new UserBas();
         UserBasDetail detail = new UserBasDetail();
@@ -56,7 +67,12 @@ public class AuthenticationService {
         newUser.setUserbasdetail(detail);
 
         userBasRepository.save(newUser);
+        //salvando newUser salvo il relativo UserBasDetail associato
         return newUser;
+    }
+
+    public List<UserBas> findAll(){
+        return userBasRepository.findAll();
     }
 
     public UserBas findUser(String email){
@@ -67,23 +83,7 @@ public class AuthenticationService {
         return userBasRepository.findByEmail(email) != null;
     }
 
-    public String authenticateUser(LoginRequest credentials) throws UsernameNotFoundException,
-            BadCredentialsException {
-        if (findUser(credentials.getEmail()) == null)
-            throw new IllegalArgumentException("Not registred");
 
-
-        //TO-DO Gestire eccezione al login se ci si registra
-        // Throws exception if user is not found or credentials are invalid
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    credentials.getEmail(),
-                    credentials.getPassword()));
-        }catch (Exception e){
-            System.out.println("AuthService : " + e.getMessage());
-        }
-        return jwtAuthenticationManager.generateJwtToken(credentials.getEmail());
-    }
 
 
 }

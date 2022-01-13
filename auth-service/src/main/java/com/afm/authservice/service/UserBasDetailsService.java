@@ -19,28 +19,24 @@ public class UserBasDetailsService {
         return userBasDetailRepository.findByUserbas(userbas);
     }
 
-    public boolean save(UserBasDetail user){
-        userBasDetailRepository.save(user);
-        return true;
-    }
 
-    public void createDetailsUser(UserBas ref, UserPayload payload){
-        UserBasDetail userBasDetail = ref.getUserbasdetail();
+    public void createDetailsUser(UserPayload payload){
+        UserBasDetail userBasDetail = userBasDetailRepository.findByUserbasId(payload.getId());
 
         userBasDetail.setBirthdate(payload.getBirthdate());
         userBasDetail.setCreditcard(payload.getCreditcard());
         userBasDetail.setFirstname(payload.getFirstname());
         userBasDetail.setSecondname(payload.getSecondname());
         userBasDetail.setTelephone(payload.getTelephone());
-        userBasDetail.setUserbas(ref);
+        //userBasDetail.setUserbas(refUser);
 
-        ref.setUserbasdetail(userBasDetail);
+        //refUser.setUserbasdetail(userBasDetail);
         //userBasRepository.save(ref);
         userBasDetailRepository.save(userBasDetail);
     }
 
-    public boolean updateDetailsUser(UserBas ref, UserPayload payload){
-        UserBasDetail userBasDetail = userBasDetailRepository.findByUserbas(ref);
+    public boolean updateDetailsUser(UserPayload payload){
+        UserBasDetail userBasDetail = userBasDetailRepository.findByUserbasId(payload.getId());
 
         if(!payload.getTelephone().isBlank()){
             userBasDetail.setTelephone(payload.getTelephone());

@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @ToString
 public class UserPayload {
+    private Long id;
     private String email;
     private String password;
     private String firstname;
