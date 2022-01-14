@@ -15,3 +15,11 @@ spring:
             non_contextual_creation: true
         temp:
           use_jdbc_metadata_defaults: false
+
+services:
+  authentication:
+    authAddress: http://localhost:8082
+    profileAddress: http://localhost:8081
+
+server:
+  port: 8080
