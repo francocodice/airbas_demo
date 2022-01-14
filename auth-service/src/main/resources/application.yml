@@ -4,6 +4,9 @@ security:
   jwtSecret: airbasKey64
   pswExtUser: externalUser
 
+server:
+  port: 8082
+
 spring:
   datasource:
     password: password

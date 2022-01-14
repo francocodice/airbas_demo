@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/springsocial
+    username: newuser
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        temp:
+          use_jdbc_metadata_defaults: false
