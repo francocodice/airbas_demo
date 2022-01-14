@@ -56,15 +56,15 @@ public class AuthenticationService {
             throw new Exception("Email already exists");
 
         UserBas newUser = new UserBas();
-        UserBasDetail detail = new UserBasDetail();
+        //UserBasDetail detail = new UserBasDetail();
         //necessario aggiornare entrambe le referenze
-        detail.setUserbas(newUser);
+        //detail.setUserbas(newUser);
 
         newUser.setEmail(request.getEmail());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         newUser.setRole(ERole.ROLE_USER);
         newUser.setProvider(provider);
-        newUser.setUserbasdetail(detail);
+        //newUser.setUserbasdetail(detail);
 
         userBasRepository.save(newUser);
         //salvando newUser salvo il relativo UserBasDetail associato

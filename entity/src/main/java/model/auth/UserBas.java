@@ -26,9 +26,9 @@ public class UserBas {
     @Enumerated(EnumType.STRING)
     private ERole role;
 
-    @OneToOne(mappedBy = "userbas", fetch = FetchType.LAZY,
+    /*@OneToOne(mappedBy = "userbas", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     @JsonManagedReference
-    private UserBasDetail userbasdetail;
+    private UserBasDetail userbasdetail;*/
 
 }

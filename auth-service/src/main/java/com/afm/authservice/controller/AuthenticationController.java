@@ -25,7 +25,7 @@ public class AuthenticationController {
         payload.setId(user.getId());
         payload.setPassword("");
 
-        return new ResponseEntity(payload, HttpStatus.OK);
+        return new ResponseEntity(payload, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")

@@ -1,10 +1,10 @@
-package com.afm.airbas;
+package com.afm.profileservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AirbasApplicationTests {
+class ProfileServiceApplicationTests {
 
     @Test
     void contextLoads() {

@@ -35,9 +35,10 @@ public class UserBasDetail {
     //@Column(name="telephone")
     private String telephone;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    /*@OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "userbas_id", nullable = false)
     @JsonBackReference
-    private UserBas userbas;
+    private UserBas userbas;*/
+    private String email;
 
 }
