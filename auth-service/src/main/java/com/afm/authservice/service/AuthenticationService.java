@@ -1,6 +1,5 @@
 package com.afm.authservice.service;
 
-import com.afm.authservice.exception.UsernameNotFoundException;
 import com.afm.authservice.repository.UserBasRepository;
 import com.afm.authservice.security.JWTAuthenticationManager;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import model.auth.AuthProvider;
 import model.auth.ERole;
 import model.auth.UserBas;
-import model.auth.UserBasDetail;
+import model.exception.ResourceNotFoundException;
 import model.utils.LoginRequest;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,25 +34,26 @@ public class AuthenticationService {
     private final JWTAuthenticationManager jwtAuthenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String authenticateUser(LoginRequest credentials) throws UsernameNotFoundException,
+    public String authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
             BadCredentialsException {
 
         if (findUser(credentials.getEmail()) == null)
-            throw new UsernameNotFoundException("Email - " + credentials.getEmail());
+            throw new ResourceNotFoundException("Email not exists");
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     credentials.getEmail(),
                     credentials.getPassword()));
-        }catch (UsernameNotFoundException e){
-            throw new BadCredentialsException("Invalid Credentials - Password not valid");
+        }catch (BadCredentialsException e){
+            throw new IllegalArgumentException("Password Wrong");
         }
+
         return jwtAuthenticationManager.generateJwtToken(credentials.getEmail());
     }
 
-    public UserBas createUser(LoginRequest request, AuthProvider provider) throws Exception {
+    public void createUser(LoginRequest request, AuthProvider provider) throws IllegalArgumentException {
         if (userBasRepository.findByEmail(request.getEmail()) != null)
-            throw new Exception("Email already exists");
+            throw new IllegalArgumentException("Email already exists");
 
         UserBas newUser = new UserBas();
         //UserBasDetail detail = new UserBasDetail();
@@ -68,9 +68,11 @@ public class AuthenticationService {
 
         userBasRepository.save(newUser);
         //salvando newUser salvo il relativo UserBasDetail associato
-        return newUser;
     }
 
+    public void deleteUser(UserBas user){
+        userBasRepository.delete(user);
+    }
     public List<UserBas> findAll(){
         return userBasRepository.findAll();
     }

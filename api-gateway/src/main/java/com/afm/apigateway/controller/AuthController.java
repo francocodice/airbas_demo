@@ -4,9 +4,13 @@ import com.afm.apigateway.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import model.utils.LoginRequest;
 import model.utils.UserPayload;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestController
 @RequestMapping("api/auth")
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class AuthController {
     private final AuthService authService;
+
 
     @CrossOrigin
     @GetMapping("/users")
@@ -39,8 +44,6 @@ public class AuthController {
     public ResponseEntity<?> deleteUser(@PathVariable String email)  {
         authService.deleteUser(email);
         return new ResponseEntity<>(HttpStatus.OK);
-        //UserPayload payloadId = authService.createUser(payload);
-        //return new ResponseEntity(payloadId, HttpStatus.CREATED);
 
     }
 }

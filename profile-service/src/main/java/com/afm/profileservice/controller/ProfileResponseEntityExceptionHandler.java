@@ -1,6 +1,6 @@
-package com.afm.authservice.controller;
+package com.afm.profileservice.controller;
 
-import com.afm.authservice.exception.UsernameNotFoundException;
+import model.exception.ResourceNotFoundException;
 import model.utils.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.Date;
 
 @RestController
 @ControllerAdvice
-public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class ProfileResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handlerAllExcptions(Exception e, WebRequest request) {
@@ -27,7 +27,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({UsernameNotFoundException.class})
+    @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<Object> handlerUsernameNotFoundException(Exception e, WebRequest request) {
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
