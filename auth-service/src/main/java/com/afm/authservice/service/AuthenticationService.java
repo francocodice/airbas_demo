@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import model.auth.AuthProvider;
 import model.auth.ERole;
 import model.auth.UserBas;
+import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.LoginRequest;
 
@@ -34,6 +35,23 @@ public class AuthenticationService {
     private final JWTAuthenticationManager jwtAuthenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    public boolean exisitUser(String email){
+        return userBasRepository.findByEmail(email) != null;
+    }
+
+    public UserBas findUser(String email){
+        return userBasRepository.findByEmail(email);
+    }
+
+    public List<UserBas> findAll(){
+        return userBasRepository.findAll();
+    }
+
+    public void deleteUser(UserBas user){
+        userBasRepository.delete(user);
+    }
+
+
     public String authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
             BadCredentialsException {
 
@@ -45,7 +63,7 @@ public class AuthenticationService {
                     credentials.getEmail(),
                     credentials.getPassword()));
         }catch (BadCredentialsException e){
-            throw new IllegalArgumentException("Password Wrong");
+            throw new BadRequestException("Password Wrong");
         }
 
         return jwtAuthenticationManager.generateJwtToken(credentials.getEmail());
@@ -53,37 +71,20 @@ public class AuthenticationService {
 
     public void createUser(LoginRequest request, AuthProvider provider) throws IllegalArgumentException {
         if (userBasRepository.findByEmail(request.getEmail()) != null)
-            throw new IllegalArgumentException("Email already exists");
+            throw new BadRequestException("Email already exists");
 
         UserBas newUser = new UserBas();
-        //UserBasDetail detail = new UserBasDetail();
-        //necessario aggiornare entrambe le referenze
-        //detail.setUserbas(newUser);
-
         newUser.setEmail(request.getEmail());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         newUser.setRole(ERole.ROLE_USER);
         newUser.setProvider(provider);
-        //newUser.setUserbasdetail(detail);
-
         userBasRepository.save(newUser);
-        //salvando newUser salvo il relativo UserBasDetail associato
     }
 
-    public void deleteUser(UserBas user){
-        userBasRepository.delete(user);
-    }
-    public List<UserBas> findAll(){
-        return userBasRepository.findAll();
-    }
 
-    public UserBas findUser(String email){
-        return userBasRepository.findByEmail(email);
-    }
 
-    public boolean exisitUser(String email){
-        return userBasRepository.findByEmail(email) != null;
-    }
+
+
 
 
 

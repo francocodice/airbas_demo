@@ -3,6 +3,7 @@ package com.afm.apigateway.service;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBas;
 import model.utils.LoginRequest;
+import model.utils.TokenDto;
 import model.utils.UserPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,19 +51,53 @@ public class AuthService {
     public UserPayload createUser(UserPayload payload) {
         HttpEntity<UserPayload> credentialsHttpEntity = new HttpEntity<>(payload);
 
-        UserPayload payload_returned = restTemplate.postForObject(
+        UserPayload userDatailsData = restTemplate.postForObject(
                 authAddress + "/auth/signup",
                 credentialsHttpEntity,
                 UserPayload.class
         );
-        return payload_returned;
+        return userDatailsData;
     }
 
-    public void deleteUser(String email){
+    public void deleteUser(UserPayload payload){
         restTemplate.getForEntity(
-                authAddress + String.format("/auth/users/delete/%s", email),
+                authAddress + String.format("/auth/users/delete/%s", payload.getEmail()),
                 Void.class);
+    }
 
+    public TokenDto loginGoogle(TokenDto token){
+        HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
+
+        TokenDto jwtFromGoogle = restTemplate.postForObject(
+                authAddress + "/oauth/google",
+                credentialsHttpEntity,
+                TokenDto.class
+        );
+        return jwtFromGoogle;
+    }
+
+
+    public TokenDto loginFacebook(TokenDto token){
+        HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
+
+        TokenDto jwtFromFacebook = restTemplate.postForObject(
+                authAddress + "/oauth/facebook",
+                credentialsHttpEntity,
+                TokenDto.class
+        );
+        return jwtFromFacebook;
+    }
+
+
+    public TokenDto loginAmazon(TokenDto token){
+        HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
+
+        TokenDto jwtFromAmazon = restTemplate.postForObject(
+                authAddress + "/oauth/amazon",
+                credentialsHttpEntity,
+                TokenDto.class
+        );
+        return jwtFromAmazon;
     }
 
 }

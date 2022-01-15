@@ -1,5 +1,6 @@
 package com.afm.authservice.controller;
 
+import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -24,17 +25,16 @@ public class AuthResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handlerAllExceptions(Exception e, WebRequest request) {
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
-        System.out.println("GENERIC EXCEPTION FIND");
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<Object> handlerIllegalArgumentException(Exception e, WebRequest request) {
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<Object> handlerBadRequestException(Exception e, WebRequest request) {
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
-        System.out.println("ResourceNotFoundException EXCEPTION FIND");
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
+
 
     @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<Object> handlerResourceNotFoundException(Exception e, WebRequest request) {

@@ -18,8 +18,8 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @PostMapping("/register")
-    public void signUp(@RequestBody UserPayload payload) {
-        profileService.register(payload);
+    public UserPayload signUp(@RequestBody UserPayload payload) {
+        return profileService.register(payload);
     }
 
     @GetMapping("/details/{email}")

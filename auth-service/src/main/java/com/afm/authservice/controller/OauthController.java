@@ -49,7 +49,8 @@ public class OauthController {
 
 
     @PostMapping("/google")
-    public ResponseEntity<?> google(@RequestBody TokenDto tokenGoogle) throws Exception {
+    public TokenDto google(@RequestBody TokenDto tokenGoogle) throws Exception {
+        System.out.println("ciao " + tokenGoogle.getValue());
         final NetHttpTransport netHttpTransport = new NetHttpTransport();
         final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
@@ -68,7 +69,7 @@ public class OauthController {
         String jwt = authenticationService.authenticateUser(new LoginRequest(payload.getEmail(), pswExtUser));
         TokenDto tokenDto = new TokenDto();
         tokenDto.setValue(jwt);
-        return new ResponseEntity<>(tokenDto,HttpStatus.OK);
+        return tokenDto;
     }
 
     @PostMapping("/facebook")

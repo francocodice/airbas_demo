@@ -38,14 +38,16 @@ public class ProfileService {
         ).getBody();
     }
 
-    public void register(UserPayload payload){
+    public UserPayload register(UserPayload payload){
         HttpEntity<UserPayload> credentialsHttpEntity = new HttpEntity<>(payload);
 
-       restTemplate.postForObject(
+        UserPayload new_payload = restTemplate.postForObject(
                 profileAddress + "/profile/register",
                 credentialsHttpEntity,
-                Void.class
+               UserPayload.class
         );
+
+        return new_payload;
     }
 
 

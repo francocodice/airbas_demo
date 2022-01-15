@@ -4,6 +4,7 @@ package com.afm.profileservice.service;
 import com.afm.profileservice.repository.UserBasDetailRepository;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBasDetail;
+import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.UserPayload;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,10 @@ public class UserBasDetailsService {
     }
 
 
-    public void createDetailsUser(UserPayload payload){
+    public UserBasDetail createDetailsUser(UserPayload payload){
         UserBasDetail userBasDetail = userBasDetailRepository.findByEmail(payload.getEmail());
-        if (userBasDetail == null)
-            throw new ResourceNotFoundException("Detail already exsit");
+        if (userBasDetail != null)
+            throw new BadRequestException("Detail user already exsit");
 
         userBasDetail = new UserBasDetail();
         userBasDetail.setBirthdate(payload.getBirthdate());
@@ -40,6 +41,7 @@ public class UserBasDetailsService {
         userBasDetail.setTelephone(payload.getTelephone());
         userBasDetail.setEmail(payload.getEmail());
         userBasDetailRepository.save(userBasDetail);
+        return userBasDetail;
     }
 
     public UserBasDetail updateDetailsUser(UserPayload payload){

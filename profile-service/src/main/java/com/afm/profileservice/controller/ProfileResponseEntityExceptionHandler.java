@@ -1,5 +1,6 @@
 package com.afm.profileservice.controller;
 
+import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,17 @@ public class ProfileResponseEntityExceptionHandler extends ResponseEntityExcepti
     }
 
     @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<Object> handlerUsernameNotFoundException(Exception e, WebRequest request) {
+    public ResponseEntity<Object> handlerResourceNotFoundException(Exception e, WebRequest request) {
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<Object> handlerBadRequestException(Exception e, WebRequest request) {
+        ExceptionResponse exceptionResponse =
+                new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
 

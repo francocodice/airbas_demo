@@ -24,6 +24,7 @@ public class ApiGatewayResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handlerAllExcptions(Exception e, WebRequest request) throws JsonProcessingException {
+
         int status = Integer.parseInt(StringUtils.substringBefore(e.getMessage()," "));
         HttpStatus httpStatus = HttpStatus.valueOf(status);
         String messageReceived = StringUtils.substringBetween(e.getMessage(), "{", "}");
@@ -31,7 +32,7 @@ public class ApiGatewayResponseEntityExceptionHandler extends ResponseEntityExce
         Map<String,String> detailExeption =
                 new ObjectMapper().readValue(templateJson, HashMap.class);
         return new ResponseEntity<>(detailExeption, httpStatus);
+        //return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
 }

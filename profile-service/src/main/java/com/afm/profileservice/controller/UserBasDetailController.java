@@ -19,10 +19,8 @@ public class UserBasDetailController {
     private final UserBasDetailsService userBasDetailsService;
 
     @PostMapping("/register")
-    public void signUp(@RequestBody UserPayload payload) {
-        if(userBasDetailsService.findDetails(payload.getEmail()) != null) {
-            userBasDetailsService.createDetailsUser(payload);
-        }
+    public UserBasDetail signUp(@RequestBody UserPayload payload) {
+        return userBasDetailsService.createDetailsUser(payload);
     }
 
 
