@@ -3,6 +3,8 @@ package com.afm.authservice.controller;
 import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.ExceptionResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,11 +22,13 @@ import java.util.Date;
 @RestController
 @ControllerAdvice
 public class AuthResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+    private static Logger logger = LoggerFactory.getLogger(AuthResponseEntityExceptionHandler.class);
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handlerAllExceptions(Exception e, WebRequest request) {
         ExceptionResponse exceptionResponse =
                 new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
+        logger.error("Exception Not managed found : " + e.getMessage() + " with cause: " +  e.getCause());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

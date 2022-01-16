@@ -2,7 +2,6 @@ package com.afm.authservice.service;
 
 import com.afm.authservice.repository.AuthorityRepository;
 import com.afm.authservice.repository.UserBasRepository;
-import com.afm.authservice.security.JwtUser;
 import lombok.RequiredArgsConstructor;
 
 import model.auth.AuthProvider;
@@ -16,7 +15,6 @@ import model.utils.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +56,7 @@ public class AuthenticationService {
     }
 
 
-    public UserDetails authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
+    public UserBas authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
             BadCredentialsException {
 
         if (findUser(credentials.getEmail()) == null)
@@ -72,7 +70,7 @@ public class AuthenticationService {
             throw new BadRequestException("Password Wrong");
         }
 
-        return springUserService.loadUserByUsername(credentials.getEmail());
+        return userBasRepository.findByEmail(credentials.getEmail());
 
     }
 
@@ -83,15 +81,7 @@ public class AuthenticationService {
         UserBas newUser = new UserBas();
         newUser.setEmail(request.getEmail());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        /*
-        Authority authorityAdmin=new Authority();
-        authorityAdmin.setName(ERole.ROLE_ADMIN);
-        authorityAdmin=authorityRepository.save(authorityAdmin);
 
-        Authority authorityUser=new Authority();
-        authorityUser.setName(ERole.ROLE_USER);
-        authorityUser=authorityRepository.save(authorityUser);
-        */
         Authority authorityUser = new Authority();
         authorityUser.setName(role);
         authorityUser = authorityRepository.save(authorityUser);
@@ -99,7 +89,6 @@ public class AuthenticationService {
 
         newUser.setAuthorities(authorities);
 
-        //newUser.setRole(ERole.ROLE_USER);
         newUser.setProvider(provider);
         userBasRepository.save(newUser);
     }

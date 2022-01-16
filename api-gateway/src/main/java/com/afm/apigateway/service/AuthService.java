@@ -1,6 +1,5 @@
 package com.afm.apigateway.service;
 
-import com.afm.apigateway.security.jwt.JwtUser;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBas;
 import model.utils.LoginRequest;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,18 +35,6 @@ public class AuthService {
         ).getBody();
     }
 
-    public JwtUser authenticateUser(LoginRequest credentials) {
-        HttpEntity<LoginRequest> credentialsHttpEntity = new HttpEntity<>(credentials);
-
-        JwtUser currentUser = restTemplate.postForObject(
-                authAddress + "/auth/login",
-                credentialsHttpEntity,
-                JwtUser.class
-        );
-
-        return currentUser;
-    }
-
     public UserPayload createUser(UserPayload payload) {
         HttpEntity<UserPayload> credentialsHttpEntity = new HttpEntity<>(payload);
 
@@ -66,39 +52,51 @@ public class AuthService {
                 Void.class);
     }
 
-    public TokenDto loginGoogle(TokenDto token){
+    public UserBas authenticateUser(LoginRequest credentials) {
+        HttpEntity<LoginRequest> credentialsHttpEntity = new HttpEntity<>(credentials);
+
+        UserBas currentUser = restTemplate.postForObject(
+                authAddress + "/auth/login",
+                credentialsHttpEntity,
+                UserBas.class
+        );
+
+        return currentUser;
+    }
+
+    public UserBas loginGoogle(TokenDto token){
         HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
 
-        TokenDto jwtFromGoogle = restTemplate.postForObject(
+        UserBas currentUser = restTemplate.postForObject(
                 authAddress + "/oauth/google",
                 credentialsHttpEntity,
-                TokenDto.class
+                UserBas.class
         );
-        return jwtFromGoogle;
+        return currentUser;
     }
 
 
-    public TokenDto loginFacebook(TokenDto token){
+    public UserBas loginFacebook(TokenDto token){
         HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
 
-        TokenDto jwtFromFacebook = restTemplate.postForObject(
+        UserBas currentUser = restTemplate.postForObject(
                 authAddress + "/oauth/facebook",
                 credentialsHttpEntity,
-                TokenDto.class
+                UserBas.class
         );
-        return jwtFromFacebook;
+        return currentUser;
     }
 
 
-    public TokenDto loginAmazon(TokenDto token){
+    public UserBas loginAmazon(TokenDto token){
         HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
 
-        TokenDto jwtFromAmazon = restTemplate.postForObject(
+        UserBas currentUser = restTemplate.postForObject(
                 authAddress + "/oauth/amazon",
                 credentialsHttpEntity,
-                TokenDto.class
+                UserBas.class
         );
-        return jwtFromAmazon;
+        return currentUser;
     }
 
 }

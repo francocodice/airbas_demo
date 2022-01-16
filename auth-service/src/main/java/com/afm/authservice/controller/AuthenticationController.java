@@ -1,6 +1,5 @@
 package com.afm.authservice.controller;
 
-import com.afm.authservice.security.JwtUser;
 import com.afm.authservice.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import model.auth.AuthProvider;
@@ -8,6 +7,8 @@ import model.auth.ERole;
 import model.auth.UserBas;
 import model.utils.LoginRequest;
 import model.utils.UserPayload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +21,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-
+    private static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
 
     @PostMapping("/signup")
     public UserPayload signUp(@RequestBody UserPayload payload)  {
         LoginRequest credential = new LoginRequest(payload.getEmail(), payload.getPassword());
-        //TODO Gestire registrazione + jwt
         authenticationService.createUser(credential, AuthProvider.local, ERole.ROLE_USER);
         payload.setPassword("");
+        logger.info("User created : " + payload.getEmail());
         return payload;
     }
 
@@ -39,14 +40,10 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public UserDetails logIn(@RequestBody LoginRequest loginReq, HttpServletResponse response) {
-        UserDetails details = authenticationService.authenticateUser(loginReq);
-
-        //TODO GENERATE TOKEN ON API-GATEWAY
-        //final String token = jwtTokenUtil.generateToken(details);
-        //response.setHeader(tokenHeader,token);
-        //System.out.println(token);
-        return details;
+    public UserBas logIn(@RequestBody LoginRequest loginReq, HttpServletResponse response) {
+        UserBas user = authenticationService.authenticateUser(loginReq);
+        logger.info("User login : " + user.getEmail());
+        return user;
     }
 
 

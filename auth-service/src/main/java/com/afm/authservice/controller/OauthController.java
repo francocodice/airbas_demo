@@ -11,6 +11,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
 import model.auth.AuthProvider;
 import model.auth.ERole;
+import model.auth.UserBas;
 import model.utils.LoginRequest;
 import model.utils.TokenDto;
 import org.apache.http.HttpEntity;
@@ -19,6 +20,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +41,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OauthController {
     private final AuthenticationService authenticationService;
+    private static Logger logger = LoggerFactory.getLogger(OauthController.class);
 
     @Value("${spring.security.oauth2.client.registration.google.clientId}")
     String googleClientId;
@@ -50,8 +54,7 @@ public class OauthController {
 
 
     @PostMapping("/google")
-    public TokenDto google(@RequestBody TokenDto tokenGoogle) throws Exception {
-        System.out.println("ciao " + tokenGoogle.getValue());
+    public UserBas google(@RequestBody TokenDto tokenGoogle) throws Exception {
         final NetHttpTransport netHttpTransport = new NetHttpTransport();
         final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
@@ -67,15 +70,12 @@ public class OauthController {
             authenticationService.createUser(credentials, AuthProvider.google, ERole.ROLE_USER);
         }
 
-        //String jwt = authenticationService.authenticateUser(new LoginRequest(payload.getEmail(), pswExtUser));
-        TokenDto tokenDto = new TokenDto();
-        //tokenDto.setValue(jwt);
-        return tokenDto;
+        logger.info("Login with google for " + payload.getEmail());
+        return authenticationService.findUser(payload.getEmail());
     }
 
     @PostMapping("/facebook")
-    public ResponseEntity<?> facebook(@RequestBody TokenDto tokenFacebook) throws Exception {
-        System.out.println("facebook method");
+    public UserBas facebook(@RequestBody TokenDto tokenFacebook) throws Exception {
         Facebook facebook = new FacebookTemplate(tokenFacebook.getValue());
         final String [] fields = {"email", "name"};
         User user = facebook.fetchObject("me", User.class, fields);
@@ -84,16 +84,13 @@ public class OauthController {
             LoginRequest credentials = new LoginRequest(user.getEmail(), pswExtUser);
             authenticationService.createUser(credentials, AuthProvider.facebook, ERole.ROLE_USER);
         }
-
-        //String jwt = authenticationService.authenticateUser(new LoginRequest(user.getEmail(), pswExtUser));
-        TokenDto tokenDto = new TokenDto();
-        //tokenDto.setValue(jwt);
-        return new ResponseEntity(tokenDto, HttpStatus.OK);
+        logger.info("Login with facebook for " + user.getEmail());
+        return authenticationService.findUser(user.getEmail());
     }
 
 
     @PostMapping("/amazon")
-    public ResponseEntity<?> amazon(@RequestBody TokenDto tokenAmazon) throws IOException, Exception {
+    public UserBas amazon(@RequestBody TokenDto tokenAmazon) throws IOException, Exception {
         HttpGet request = new HttpGet("https://api.amazon.com/user/profile");
         request.addHeader("Authorization", "bearer " + tokenAmazon.getValue());
 
@@ -109,11 +106,8 @@ public class OauthController {
             LoginRequest credentials = new LoginRequest(detailUser.get("email"), pswExtUser);
             authenticationService.createUser(credentials, AuthProvider.amazon, ERole.ROLE_USER);
         }
-
-        //String jwt = authenticationService.authenticateUser(new LoginRequest(detailUser.get("email"), pswExtUser));
-        TokenDto tokenDto = new TokenDto();
-        //tokenDto.setValue(jwt);
-        return new ResponseEntity(tokenDto, HttpStatus.OK);
+        logger.info("Login with Amazon for " + detailUser.get("email"));
+        return authenticationService.findUser(detailUser.get("email"));
 
     }
 
