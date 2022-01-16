@@ -41,8 +41,6 @@ public class ProfileService {
                UserPayload.class
         );
 
-        System.out.println(new_payload);
-
         return new_payload;
     }
 

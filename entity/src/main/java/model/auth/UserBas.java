@@ -24,9 +24,6 @@ public class UserBas {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
-    /*@Enumerated(EnumType.STRING)
-    private ERole role;*/
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "userbas_authorities",

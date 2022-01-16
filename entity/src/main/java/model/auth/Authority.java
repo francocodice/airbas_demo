@@ -3,9 +3,13 @@ package model.auth;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "authorities")
 public class Authority {
@@ -23,27 +27,4 @@ public class Authority {
     @JsonBackReference
     private List<UserBas> users;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public ERole getName() {
-        return name;
-    }
-
-    public void setName(ERole name) {
-        this.name = name;
-    }
-
-    public List<UserBas> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<UserBas> users) {
-        this.users = users;
-    }
 }

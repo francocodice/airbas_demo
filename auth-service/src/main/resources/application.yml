@@ -4,18 +4,13 @@ security:
   jwtSecret: airbasKey64
   pswExtUser: externalUser
 
-jwt:
-  expiration: 7200
-  header: X-Auth
-  secret: mySecret
-
 server:
   port: 8082
 
 spring:
   datasource:
     password: password
-    url: jdbc:postgresql://localhost:5432/airbas
+    url: jdbc:postgresql://localhost:5432/airbas_auth
     username: newuser
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect

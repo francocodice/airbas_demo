@@ -64,6 +64,19 @@ public class AuthService {
         return currentUser;
     }
 
+    public UserBas authenticateUserSaga(UserPayload userPayload) {
+        LoginRequest credentials = new LoginRequest(userPayload.getEmail(), userPayload.getPassword());
+        HttpEntity<LoginRequest> credentialsHttpEntity = new HttpEntity<>(credentials);
+
+        UserBas currentUser = restTemplate.postForObject(
+                authAddress + "/auth/login",
+                credentialsHttpEntity,
+                UserBas.class
+        );
+
+        return currentUser;
+    }
+
     public UserBas loginGoogle(TokenDto token){
         HttpEntity<TokenDto> credentialsHttpEntity = new HttpEntity<>(token);
 

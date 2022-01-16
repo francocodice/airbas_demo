@@ -18,7 +18,7 @@ import java.io.IOException;
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtManager jwtManager;
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -30,12 +30,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails = null;
 
         if(authToken != null){
-            userDetails = jwtTokenUtil.getUserDetails(authToken);
+            userDetails = jwtManager.getUserDetails(authToken);
         }
 
         if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+            if (jwtManager.validateToken(authToken, userDetails)) {
                 // Auth without credentials
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,

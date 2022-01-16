@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     password: password
-    url: jdbc:postgresql://localhost:5432/springsocial
+    url: jdbc:postgresql://localhost:5432/airbas_profile
     username: newuser
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
