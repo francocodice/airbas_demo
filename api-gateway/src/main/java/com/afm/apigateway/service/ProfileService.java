@@ -1,19 +1,13 @@
 package com.afm.apigateway.service;
 
-import lombok.RequiredArgsConstructor;
-import model.auth.UserBas;
-import model.auth.UserBasDetail;
-import model.utils.LoginRequest;
+import model.profile.UserBasDetail;
 import model.utils.UserPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -38,7 +32,7 @@ public class ProfileService {
         ).getBody();
     }
 
-    public UserPayload register(UserPayload payload){
+    public UserPayload saveDetails(UserPayload payload){
         HttpEntity<UserPayload> credentialsHttpEntity = new HttpEntity<>(payload);
 
         UserPayload new_payload = restTemplate.postForObject(
@@ -46,6 +40,8 @@ public class ProfileService {
                 credentialsHttpEntity,
                UserPayload.class
         );
+
+        System.out.println(new_payload);
 
         return new_payload;
     }

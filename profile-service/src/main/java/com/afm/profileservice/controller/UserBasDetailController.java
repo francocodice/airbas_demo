@@ -3,13 +3,10 @@ package com.afm.profileservice.controller;
 
 import com.afm.profileservice.service.UserBasDetailsService;
 import lombok.RequiredArgsConstructor;
-import model.auth.UserBasDetail;
+import model.profile.UserBasDetail;
 import model.utils.UserPayload;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 @RestController

@@ -10,6 +10,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
 import model.auth.AuthProvider;
+import model.auth.ERole;
 import model.utils.LoginRequest;
 import model.utils.TokenDto;
 import org.apache.http.HttpEntity;
@@ -63,12 +64,12 @@ public class OauthController {
 
         if(!authenticationService.exisitUser(payload.getEmail())){
             LoginRequest credentials = new LoginRequest(payload.getEmail(), pswExtUser);
-            authenticationService.createUser(credentials, AuthProvider.google);
+            authenticationService.createUser(credentials, AuthProvider.google, ERole.ROLE_USER);
         }
 
-        String jwt = authenticationService.authenticateUser(new LoginRequest(payload.getEmail(), pswExtUser));
+        //String jwt = authenticationService.authenticateUser(new LoginRequest(payload.getEmail(), pswExtUser));
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setValue(jwt);
+        //tokenDto.setValue(jwt);
         return tokenDto;
     }
 
@@ -81,12 +82,12 @@ public class OauthController {
 
         if(!authenticationService.exisitUser(user.getEmail())){
             LoginRequest credentials = new LoginRequest(user.getEmail(), pswExtUser);
-            authenticationService.createUser(credentials, AuthProvider.facebook);
+            authenticationService.createUser(credentials, AuthProvider.facebook, ERole.ROLE_USER);
         }
 
-        String jwt = authenticationService.authenticateUser(new LoginRequest(user.getEmail(), pswExtUser));
+        //String jwt = authenticationService.authenticateUser(new LoginRequest(user.getEmail(), pswExtUser));
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setValue(jwt);
+        //tokenDto.setValue(jwt);
         return new ResponseEntity(tokenDto, HttpStatus.OK);
     }
 
@@ -106,12 +107,12 @@ public class OauthController {
 
         if(!authenticationService.exisitUser(detailUser.get("email"))){
             LoginRequest credentials = new LoginRequest(detailUser.get("email"), pswExtUser);
-            authenticationService.createUser(credentials, AuthProvider.amazon);
+            authenticationService.createUser(credentials, AuthProvider.amazon, ERole.ROLE_USER);
         }
 
-        String jwt = authenticationService.authenticateUser(new LoginRequest(detailUser.get("email"), pswExtUser));
+        //String jwt = authenticationService.authenticateUser(new LoginRequest(detailUser.get("email"), pswExtUser));
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setValue(jwt);
+        //tokenDto.setValue(jwt);
         return new ResponseEntity(tokenDto, HttpStatus.OK);
 
     }

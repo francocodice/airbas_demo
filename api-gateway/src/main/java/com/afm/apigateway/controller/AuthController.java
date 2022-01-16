@@ -1,26 +1,38 @@
 package com.afm.apigateway.controller;
 
-import com.afm.apigateway.saga.definition.UserCreationOrchestrator;
+import com.afm.apigateway.saga.orchestrators.UserCreationOrchestrator;
+import com.afm.apigateway.security.jwt.JwtTokenUtil;
+import com.afm.apigateway.security.jwt.JwtUser;
 import com.afm.apigateway.service.AuthService;
 import com.afm.apigateway.service.ProfileService;
 import model.utils.LoginRequest;
 import model.utils.TokenDto;
 import model.utils.UserPayload;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/")
 @CrossOrigin
 public class AuthController {
     private final AuthService authService;
+    private final JwtTokenUtil jwtTokenUtil;
     private UserCreationOrchestrator userCreationSaga;
 
+
+    @Value("${jwt.header}")
+    private String tokenHeader;
+
     public AuthController(AuthService authService,
-                          ProfileService profileService) {
+                          JwtTokenUtil jwtTokenUtil, ProfileService profileService) {
 
         this.authService = authService;
+        this.jwtTokenUtil = jwtTokenUtil;
         userCreationSaga = new UserCreationOrchestrator(authService, profileService);
 
     }
@@ -33,8 +45,12 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("auth/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest credential)  {
-        return new ResponseEntity(authService.authenticateUser(credential), HttpStatus.CREATED);
+    public ResponseEntity<?> login(@RequestBody LoginRequest credential, HttpServletResponse response)  {
+        JwtUser currentUser = authService.authenticateUser(credential);
+        final String token = jwtTokenUtil.generateToken(currentUser);
+        response.setHeader(tokenHeader,token);
+        System.out.println(token);
+        return new ResponseEntity(currentUser, HttpStatus.CREATED);
     }
 
     @CrossOrigin

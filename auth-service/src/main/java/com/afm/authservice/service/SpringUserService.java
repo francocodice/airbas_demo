@@ -3,9 +3,9 @@ package com.afm.authservice.service;
 
 
 import com.afm.authservice.repository.UserBasRepository;
+import com.afm.authservice.security.JwtUserFactory;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBas;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,11 +22,12 @@ public class SpringUserService implements UserDetailsService {
         if (credentials == null) {
             throw new UsernameNotFoundException(email);
         }
-        UserDetails user = User.withUsername(
+        return JwtUserFactory.create(credentials);
+
+        /*UserDetails user = User.withUsername(
                 credentials.getEmail()).
                 password(credentials.getPassword()).
-                authorities("USER").build();
-        return user;
+                authorities("USER").build();*/
 
     }
 }

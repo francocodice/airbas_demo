@@ -9,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 //@EntityScan("com.afm.entity")
-@EntityScan(basePackages= {"com.afm","model.auth"})
+@EntityScan(basePackages= {"com.afm.authservice","model.auth"})
 
 public class AuthServiceApplication {
 

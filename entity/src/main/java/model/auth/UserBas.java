@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,8 +24,15 @@ public class UserBas {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
 
-    @Enumerated(EnumType.STRING)
-    private ERole role;
+    /*@Enumerated(EnumType.STRING)
+    private ERole role;*/
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "userbas_authorities",
+            joinColumns = {@JoinColumn(name = "userbas_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authorities_id", referencedColumnName = "id")})
+    private List<Authority> authorities;
 
     /*@OneToOne(mappedBy = "userbas", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)

@@ -3,7 +3,7 @@ package com.afm.profileservice.service;
 
 import com.afm.profileservice.repository.UserBasDetailRepository;
 import lombok.RequiredArgsConstructor;
-import model.auth.UserBasDetail;
+import model.profile.UserBasDetail;
 import model.exception.BadRequestException;
 import model.exception.ResourceNotFoundException;
 import model.utils.UserPayload;

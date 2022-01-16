@@ -23,3 +23,9 @@ services:
 
 server:
   port: 8080
+
+
+jwt:
+  expiration: 7200
+  header: X-Auth
+  secret: mySecret

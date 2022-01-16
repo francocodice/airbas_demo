@@ -1,4 +1,4 @@
-package model.auth;
+package model.profile;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;

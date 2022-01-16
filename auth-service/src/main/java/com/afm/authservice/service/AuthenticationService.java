@@ -1,10 +1,12 @@
 package com.afm.authservice.service;
 
+import com.afm.authservice.repository.AuthorityRepository;
 import com.afm.authservice.repository.UserBasRepository;
-import com.afm.authservice.security.JWTAuthenticationManager;
+import com.afm.authservice.security.JwtUser;
 import lombok.RequiredArgsConstructor;
 
 import model.auth.AuthProvider;
+import model.auth.Authority;
 import model.auth.ERole;
 import model.auth.UserBas;
 import model.exception.BadRequestException;
@@ -14,9 +16,11 @@ import model.utils.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,9 +35,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserBasRepository userBasRepository;
+    private final AuthorityRepository authorityRepository;
+    private final SpringUserService springUserService;
     private final AuthenticationManager authenticationManager;
-    private final JWTAuthenticationManager jwtAuthenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     public boolean exisitUser(String email){
         return userBasRepository.findByEmail(email) != null;
@@ -52,7 +58,7 @@ public class AuthenticationService {
     }
 
 
-    public String authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
+    public UserDetails authenticateUser(LoginRequest credentials) throws ResourceNotFoundException,
             BadCredentialsException {
 
         if (findUser(credentials.getEmail()) == null)
@@ -66,17 +72,34 @@ public class AuthenticationService {
             throw new BadRequestException("Password Wrong");
         }
 
-        return jwtAuthenticationManager.generateJwtToken(credentials.getEmail());
+        return springUserService.loadUserByUsername(credentials.getEmail());
+
     }
 
-    public void createUser(LoginRequest request, AuthProvider provider) throws IllegalArgumentException {
+    public void createUser(LoginRequest request, AuthProvider provider, ERole role) throws IllegalArgumentException {
         if (userBasRepository.findByEmail(request.getEmail()) != null)
             throw new BadRequestException("Email already exists");
 
         UserBas newUser = new UserBas();
         newUser.setEmail(request.getEmail());
         newUser.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        newUser.setRole(ERole.ROLE_USER);
+        /*
+        Authority authorityAdmin=new Authority();
+        authorityAdmin.setName(ERole.ROLE_ADMIN);
+        authorityAdmin=authorityRepository.save(authorityAdmin);
+
+        Authority authorityUser=new Authority();
+        authorityUser.setName(ERole.ROLE_USER);
+        authorityUser=authorityRepository.save(authorityUser);
+        */
+        Authority authorityUser = new Authority();
+        authorityUser.setName(role);
+        authorityUser = authorityRepository.save(authorityUser);
+        List<Authority> authorities = Arrays.asList(new Authority[] {authorityUser});
+
+        newUser.setAuthorities(authorities);
+
+        //newUser.setRole(ERole.ROLE_USER);
         newUser.setProvider(provider);
         userBasRepository.save(newUser);
     }

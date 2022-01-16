@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages= {"com.afm.profileservice","model.auth"})
+@EntityScan(basePackages= {"com.afm.profileservice","model.profile"})
 public class ProfileServiceApplication {
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package com.afm.apigateway.service;
 
+import com.afm.apigateway.security.jwt.JwtUser;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBas;
 import model.utils.LoginRequest;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -35,17 +37,16 @@ public class AuthService {
         ).getBody();
     }
 
-    public String authenticateUser(LoginRequest credentials) {
+    public JwtUser authenticateUser(LoginRequest credentials) {
         HttpEntity<LoginRequest> credentialsHttpEntity = new HttpEntity<>(credentials);
 
-        String jwt = restTemplate.postForObject(
+        JwtUser currentUser = restTemplate.postForObject(
                 authAddress + "/auth/login",
                 credentialsHttpEntity,
-                String.class
+                JwtUser.class
         );
 
-        assert jwt != null;
-        return jwt;
+        return currentUser;
     }
 
     public UserPayload createUser(UserPayload payload) {

@@ -2,7 +2,7 @@ package com.afm.apigateway.controller;
 
 import com.afm.apigateway.service.ProfileService;
 import lombok.RequiredArgsConstructor;
-import model.auth.UserBasDetail;
+import model.profile.UserBasDetail;
 import model.exception.ResourceNotFoundException;
 import model.utils.UserPayload;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class ProfileController {
 
     @PostMapping("/register")
     public UserPayload signUp(@RequestBody UserPayload payload) {
-        return profileService.register(payload);
+        return profileService.saveDetails(payload);
     }
 
     @GetMapping("/details/{email}")

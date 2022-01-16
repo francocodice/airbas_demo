@@ -1,4 +1,4 @@
-package com.afm.apigateway.saga.definition;
+package com.afm.apigateway.saga.orchestrators;
 
 import com.afm.apigateway.saga.core.Orchestrator;
 import com.afm.apigateway.saga.core.SagaBuilder;
@@ -30,7 +30,7 @@ public class UserCreationOrchestrator extends Orchestrator {
                 .withCompensation(authService::deleteUser)
 
                 .step()
-                .invoke(profileService::register).addParam("userDatailsData").saveTo("jwt")
+                .invoke(profileService::saveDetails).addParam("userDatailsData").saveTo("jwt")
 
                 .build();
     }
