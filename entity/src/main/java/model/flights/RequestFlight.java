@@ -11,8 +11,8 @@ import java.util.Date;
 @Setter
 public class RequestFlight {
     private Date departureDate;
-    private Date arrivalDate;
+    private Date returnDate;
     private String departureCity;
-    private String arrivalCity;
+    private String destinationCity;
 
 }

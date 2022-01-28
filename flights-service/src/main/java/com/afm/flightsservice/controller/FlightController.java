@@ -1,14 +1,18 @@
 package com.afm.flightsservice.controller;
 
+import com.afm.flightsservice.service.AirPlaneService;
 import com.afm.flightsservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
+import model.flights.AirPlane;
 import model.flights.Flight;
+import model.flights.RequestAddFlight;
 import model.flights.RequestFlight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @RequestMapping("/flights")
@@ -17,40 +21,68 @@ import java.util.List;
 public class FlightController {
     private static Logger logger = LoggerFactory.getLogger(FlightController.class);
     private final FlightService flightService;
+    private final AirPlaneService airPlaneService;
 
     @PostMapping("/add")
-    public Flight addFlight(@RequestBody Flight newFlight){
-        logger.info("adding flights");
-        return flightService.addFlight(newFlight);
+    public Flight addFlight(@RequestBody RequestAddFlight newFlight){
+        logger.info("Adding flight" );
+        AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
+        return flightService.addFlight(newFlight, currentAirPlane.getName());
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/allFlights")
     public List<Flight> getAll(){
         return flightService.getAll();
     }
 
-    @PostMapping("/findDistinctByDepartureDate")
-    public List<Flight> findDistinctByDepartureDate(@RequestBody RequestFlight request){
+    @PostMapping("/getByDate")
+    public List<Flight> findByDate(@RequestBody RequestFlight request){
         return flightService.findByDepartureDate(request.getDepartureDate());
     }
-//  1) citta partenza, città arrivo, data partenza findGoOnly
-//  2)citta partenza, citta arrivo, data partenza, data arrivo
-//  3)(opzionale) città partenza, città arrivo
 
     @PostMapping("/findByDepartureCity")
     public List<Flight> findByDepartureCity(@RequestBody RequestFlight request){
         return flightService.findByDepartureCity(request.getDepartureCity());
     }
 
-    @PostMapping("/findGoOnly")
-    public List<Flight> findGoOnly(@RequestBody RequestFlight request){
-        return flightService.findGoOnly(request.getDepartureCity(), request.getArrivalCity(), request.getDepartureDate());
+    @PostMapping("/justGone")
+    public List<Flight> findFlight(@RequestBody RequestFlight request){
+        logger.info("Searching flights (justGone) : " + request.toString());
+
+        return flightService.findFlight(request.getDepartureCity(), request.getDestinationCity(), request.getDepartureDate());
     }
 
-    @PostMapping("/findGoAndReturn")
-    public List<Flight> findGoAndReturn(@RequestBody RequestFlight request){
-        return flightService.findGoAndReturn(request.getDepartureCity(), request.getArrivalCity(), request.getDepartureDate(), request.getArrivalDate());
+    @PostMapping("/fullTrip")
+    public List<List<Flight>> findFlightWithReturn(@RequestBody RequestFlight request){
+        logger.info("Searching flights (FullTrip) : " + request.toString());
+
+        List<List<Flight>> flights = new LinkedList<>();
+        flights.add(flightService.findFlight(request.getDepartureCity(), request.getDestinationCity(), request.getDepartureDate()));
+        flights.add(flightService.findFlight(request.getDestinationCity(), request.getDepartureCity(), request.getReturnDate()));
+        return flights;
     }
+
+    @GetMapping("/allAirplane")
+    public List<AirPlane> getAllAirPlane(){
+        return airPlaneService.getAllAirplane();
+    }
+
+    @GetMapping("/getAirplane")
+    public AirPlane getAirPlane(@RequestParam String name){
+        return airPlaneService.getAirPlane(name);
+    }
+
+    @GetMapping("/bookSeat")
+    public AirPlane bookSeat(@RequestParam String name, @RequestParam String seatCord){
+        return airPlaneService.addBookSeat(name, seatCord);
+    }
+
+    @GetMapping("/removeBookSeat")
+    public AirPlane removeBookSeat(@RequestParam String name, @RequestParam String seatCord){
+        return airPlaneService.removeBookSeat(name, seatCord);
+    }
+
+
 
 
 }
