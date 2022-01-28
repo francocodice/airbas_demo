@@ -59,7 +59,6 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
     @CrossOrigin
     @PostMapping("oauth/google")
     public ResponseEntity<?> loginGoogle(@RequestBody TokenDto token, HttpServletResponse response)  {
