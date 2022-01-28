@@ -9,6 +9,7 @@
         <module>auth-service</module>
         <module>profile-service</module>
         <module>api-gateway</module>
+        <module>flights-service</module>
     </modules>
 
     <parent>
