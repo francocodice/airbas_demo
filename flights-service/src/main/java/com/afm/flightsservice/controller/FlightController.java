@@ -5,13 +5,12 @@ import com.afm.flightsservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import model.flights.AirPlane;
 import model.flights.Flight;
-import model.flights.RequestAddFlight;
-import model.flights.RequestFlight;
+import model.utils.RequestAddFlight;
+import model.utils.RequestFlight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 

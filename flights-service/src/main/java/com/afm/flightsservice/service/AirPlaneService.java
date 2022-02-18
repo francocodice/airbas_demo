@@ -4,9 +4,8 @@ import com.afm.flightsservice.repository.AirPlaneRepository;
 import lombok.RequiredArgsConstructor;
 import model.flights.AirPlane;
 import model.flights.AirPlaneType;
-import model.flights.RequestAddFlight;
+import model.utils.RequestAddFlight;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;

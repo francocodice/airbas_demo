@@ -1,17 +1,14 @@
 package com.afm.flightsservice.service;
 
-import com.afm.flightsservice.repository.AirPlaneRepository;
 import com.afm.flightsservice.repository.FlightRepository;
 import lombok.RequiredArgsConstructor;
-import model.flights.AirPlane;
 import model.flights.Flight;
-import model.flights.RequestAddFlight;
+import model.utils.RequestAddFlight;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +26,7 @@ public class FlightService {
         f.setArrivalAirport(flight.getArrivalAirport());
         f.setDepartureAirport(flight.getDepartureAirport());
         f.setAirPlaneName(airPlaneName);
+        f.setPrice(new BigDecimal(flight.getPrice()));
         flightRepository.save(f);
         f.setName(generateNameService.generateFlightName(f.getId()));
 

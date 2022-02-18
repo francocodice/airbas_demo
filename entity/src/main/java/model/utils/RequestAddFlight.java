@@ -1,7 +1,8 @@
-package model.flights;
+package model.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.flights.AirPlaneType;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,5 +19,6 @@ public class RequestAddFlight {
     private String arrivalCity;
     private String departureAirport;
     private String arrivalAirport;
+    private String price;
     private AirPlaneType type;
 }
