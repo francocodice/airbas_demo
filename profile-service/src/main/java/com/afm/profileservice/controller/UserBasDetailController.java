@@ -20,7 +20,6 @@ public class UserBasDetailController {
         return userBasDetailsService.createDetailsUser(payload);
     }
 
-
     @GetMapping("/details/{email}")
     public UserBasDetail details(@PathVariable String email)  {
         return userBasDetailsService.findDetails(email);

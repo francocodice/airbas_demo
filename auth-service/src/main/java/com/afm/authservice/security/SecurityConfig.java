@@ -2,6 +2,9 @@ package com.afm.authservice.security;
 
 import com.afm.authservice.service.SpringUserService;
 import lombok.RequiredArgsConstructor;
+import model.auth.Authority;
+import model.auth.ERole;
+import model.auth.UserBas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,9 +14,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -29,17 +31,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final SpringUserService springUserService;
 
     @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+       auth.inMemoryAuthentication()
+               .withUser("ADMIN").password(bCryptPasswordEncoder.encode("ADMIN"))
+               .roles(ERole.ADMIN.name());
+    }
+
+    @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(springUserService)
                 .passwordEncoder(bCryptPasswordEncoder);
     }
 
-
     @Bean
     public AuthenticationManager getAuthenticationManager() throws Exception {
         return authenticationManager();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -58,10 +67,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .cors().and()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/oauth/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/auth/signup", "/auth/login","/auth/users/**").hasAnyRole(ERole.USER.name())
+                .antMatchers("/profile/**").hasAnyRole(ERole.USER.name())
+               .antMatchers("/auth/signup/admin").hasAnyRole(ERole.ADMIN.name())
+                .anyRequest().fullyAuthenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login").permitAll()
+                .and()
+                .logout()
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/login").and().httpBasic();
+
     }
 }

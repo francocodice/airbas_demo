@@ -1,7 +1,5 @@
 package com.afm.authservice.service;
 
-
-
 import com.afm.authservice.repository.UserBasRepository;
 import lombok.RequiredArgsConstructor;
 import model.auth.UserBas;
@@ -22,12 +20,14 @@ public class SpringUserService implements UserDetailsService {
         if (credentials == null) {
             throw new UsernameNotFoundException(email);
         }
-
+/*
         UserDetails user = User.withUsername(
                 credentials.getEmail()).
                 password(credentials.getPassword()).
                 authorities("USER").build();
-        return user;
+
+ */
+        return new UserBasDetails(credentials);
 
     }
 }

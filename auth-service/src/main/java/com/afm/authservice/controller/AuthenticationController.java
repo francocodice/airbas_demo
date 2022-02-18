@@ -14,12 +14,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 
 @RequestMapping("/auth")
 @RestController
 @RequiredArgsConstructor
 public class AuthenticationController {
+
     private final AuthenticationService authenticationService;
     private static Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -27,7 +29,7 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public UserPayload signUp(@RequestBody UserPayload payload)  {
         LoginRequest credential = new LoginRequest(payload.getEmail(), payload.getPassword());
-        authenticationService.createUser(credential, AuthProvider.local, ERole.ROLE_USER);
+        authenticationService.createUser(credential, AuthProvider.local, ERole.USER);
         payload.setPassword("");
         logger.info("User created : " + payload.getEmail());
         return payload;

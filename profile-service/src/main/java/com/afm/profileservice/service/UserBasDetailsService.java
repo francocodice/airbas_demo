@@ -31,7 +31,7 @@ public class UserBasDetailsService {
     public UserBasDetail createDetailsUser(UserPayload payload){
         UserBasDetail userBasDetail = userBasDetailRepository.findByEmail(payload.getEmail());
         if (userBasDetail != null)
-            throw new BadRequestException("Detail user already exsit");
+            throw new BadRequestException("Detail user already exist");
 
         userBasDetail = new UserBasDetail();
         userBasDetail.setBirthdate(payload.getBirthdate());
