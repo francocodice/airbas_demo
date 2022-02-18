@@ -10,6 +10,7 @@
         <module>profile-service</module>
         <module>api-gateway</module>
         <module>flights-service</module>
+        <module>reservation-service</module>
     </modules>
 
     <parent>

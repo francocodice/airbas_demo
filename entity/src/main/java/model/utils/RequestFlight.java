@@ -1,4 +1,4 @@
-package model.flights;
+package model.utils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +14,6 @@ public class RequestFlight {
     private Date returnDate;
     private String departureCity;
     private String destinationCity;
-
+    private String people;
+    private boolean fullTrip;
 }
