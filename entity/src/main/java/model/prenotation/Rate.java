@@ -17,7 +17,5 @@ public class Rate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal price;
-    private BigDecimal priceForLuggage;
-    private Boolean holdBaggage;
     private String type; //"BASE, PLUS, PREMIUM"
 }

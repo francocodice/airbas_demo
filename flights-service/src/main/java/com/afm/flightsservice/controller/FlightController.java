@@ -3,12 +3,17 @@ package com.afm.flightsservice.controller;
 import com.afm.flightsservice.service.AirPlaneService;
 import com.afm.flightsservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
+import model.auth.UserBas;
 import model.flights.AirPlane;
 import model.flights.Flight;
 import model.utils.RequestAddFlight;
 import model.utils.RequestFlight;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
@@ -17,26 +22,40 @@ import java.util.List;
 @RequestMapping("/flights")
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
+
 public class FlightController {
     private static Logger logger = LoggerFactory.getLogger(FlightController.class);
     private final FlightService flightService;
     private final AirPlaneService airPlaneService;
 
-    @PostMapping("/add")
-    public Flight addFlight(@RequestBody RequestAddFlight newFlight){
+    @Autowired
+    public RestTemplate restTemplate;
+
+    @GetMapping("/add")
+    public Flight addFlight(){
         logger.info("Adding flight" );
-        AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
-        return flightService.addFlight(newFlight, currentAirPlane.getName());
+
+        // Spostare nell'API Gateway
+        List<RequestAddFlight> flights = restTemplate.exchange(
+                "http://127.0.0.1:5000/generate",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<RequestAddFlight>>() {}
+        ).getBody();
+
+        for(RequestAddFlight newFlight : flights){
+            AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
+            flightService.addFlight(newFlight, currentAirPlane.getName());
+        }
+        System.out.println();
+
+        return null;
     }
 
     @GetMapping("/allFlights")
     public List<Flight> getAll(){
         return flightService.getAll();
-    }
-
-    @PostMapping("/getByDate")
-    public List<Flight> findByDate(@RequestBody RequestFlight request){
-        return flightService.findByDepartureDate(request.getDepartureDate());
     }
 
     @PostMapping("/findByDepartureCity")
@@ -46,18 +65,23 @@ public class FlightController {
 
     @PostMapping("/justGone")
     public List<Flight> findFlight(@RequestBody RequestFlight request){
-        logger.info("Searching flights (justGone) : " + request.toString());
-
-        return flightService.findFlight(request.getDepartureCity(), request.getDestinationCity(), request.getDepartureDate());
+        return flightService.findFlight(request.getDepartureCity(),
+                request.getDestinationCity(),
+                request.getDepartureDate());
     }
 
     @PostMapping("/fullTrip")
     public List<List<Flight>> findFlightWithReturn(@RequestBody RequestFlight request){
-        logger.info("Searching flights (FullTrip) : " + request.toString());
-
         List<List<Flight>> flights = new LinkedList<>();
-        flights.add(flightService.findFlight(request.getDepartureCity(), request.getDestinationCity(), request.getDepartureDate()));
-        flights.add(flightService.findFlight(request.getDestinationCity(), request.getDepartureCity(), request.getReturnDate()));
+
+        flights.add(flightService.findFlight(request.getDepartureCity(),
+                request.getDestinationCity(),
+                request.getDepartureDate()));
+
+        flights.add(flightService.findFlight(request.getDestinationCity(),
+                request.getDepartureCity(),
+                request.getReturnDate()));
+
         return flights;
     }
 

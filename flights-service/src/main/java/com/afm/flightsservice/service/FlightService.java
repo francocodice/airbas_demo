@@ -29,6 +29,7 @@ public class FlightService {
         f.setPrice(new BigDecimal(flight.getPrice()));
         flightRepository.save(f);
         f.setName(generateNameService.generateFlightName(f.getId()));
+        flightRepository.save(f);
 
         return f;
     }
@@ -36,10 +37,6 @@ public class FlightService {
 
     public List<Flight> getAll() {
         return flightRepository.findAll();
-    }
-
-    public List<Flight> findByDepartureDate(Date departureDate){
-        return flightRepository.findByDepartureDate(departureDate);
     }
 
     public List<Flight> findByDepartureCity(String departureCity){

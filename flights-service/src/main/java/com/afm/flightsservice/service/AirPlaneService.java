@@ -31,6 +31,7 @@ public class AirPlaneService {
 
         airPlane.setName(generateNameService.generateAirPlaneName(airPlane.getId()));
 
+        airPlaneRepository.save(airPlane);
         return airPlane;
     }
 

@@ -10,8 +10,13 @@ import model.prenotation.Rate;
 @Getter
 @Setter
 public class ReservationRequest {
-    private Flight flight;
+    private String flightName;
+    private String airPlaneName;
+    private String seatCord;
     private String rate;
     private String usermail;
-    private Passenger passenger;
+    private String passangerName;
+    private String passangerSurname;
+    private String passangerPhone;
+    // private String passengerDate;
 }

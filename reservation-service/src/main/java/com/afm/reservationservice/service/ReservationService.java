@@ -20,14 +20,14 @@ public class ReservationService {
     private final RateRepository rateRepository;
     private final PassengerRepository passengerRepository;
 
-    public Reservation createReservation(Flight flight, String rateName, Passenger passenger, String userMail) {
+    public Reservation createReservation(String flightName, String airPlaneName,
+                                         String rateName, Passenger passenger, String userMail) {
         Reservation reservation = new Reservation();
-        Rate rate = rateRepository.findByType(rateName);
+        //Rate rate = rateRepository.findByType(rateName);
 
-        reservation.setCityArrival(flight.getArrivalCity());
-        reservation.setCityDeparture(flight.getDepartureCity());
-        reservation.setFlightName(flight.getName());
-        reservation.setRate(rate);
+        reservation.setAirPlaneName(airPlaneName);
+        reservation.setFlightName(flightName);
+        reservation.setRate(rateName);
         reservation.setPassenger(passenger);
         reservation.setUserEmail(userMail);
         reservation.setName("ASD");
@@ -35,8 +35,8 @@ public class ReservationService {
         passengerRepository.save(passenger);
         reservation.setPassenger(passenger);
 
-        BigDecimal result = flight.getPrice().add(rate.getPrice());
-        reservation.setPrice( result);
+        //BigDecimal result = flight.getPrice().add(rate.getPrice());
+        //reservation.setPrice( result);
         reservationRepository.save(reservation);
 
 

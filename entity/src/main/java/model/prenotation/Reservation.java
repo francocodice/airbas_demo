@@ -14,13 +14,13 @@ public class Reservation {
     private Long id;
     private String userEmail;
     private String name;
-    private String cityArrival;
-    private String cityDeparture;
     private String flightName;
     private String seatCord;
-    private BigDecimal price;
-    @OneToOne
-    private Rate rate;
+    private String airPlaneName;
+    //private BigDecimal price;
+    //@OneToOne
+    //private Rate rate;
+    private String rate;
     @OneToOne
     private Passenger passenger;
 }

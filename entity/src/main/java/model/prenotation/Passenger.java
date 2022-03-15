@@ -21,6 +21,5 @@ public class Passenger {
     private String secondname;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date birthdate;
-    private String creditcard;
     private String telephone;
 }
