@@ -35,7 +35,6 @@ import java.util.Set;
 public class AuthenticationService {
     private final UserBasRepository userBasRepository;
     private final AuthorityRepository authorityRepository;
-    private final SpringUserService springUserService;
     private final AuthenticationManager authenticationManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 

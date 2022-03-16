@@ -26,12 +26,12 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public UserPayload signUp(@RequestBody UserPayload payload)  {
         LoginRequest credential = new LoginRequest(payload.getEmail(), payload.getPassword());
-        authenticationService.createUser(credential, AuthProvider.local, ERole.USER);
+        authenticationService.createUser(credential, AuthProvider.local, ERole.ROLE_USER);
         payload.setPassword("");
         logger.info("User created : " + payload.getEmail());
         return payload;
     }
-
+    // @TODO to manage
     @GetMapping("/signup/admin")
     public UserBas signUpAdmin(){
         return null;
@@ -45,13 +45,14 @@ public class AuthenticationController {
         return user;
     }
 
-
+    // @TODO to manage
     @GetMapping("/users")
     public List<UserBas> users() {
         return authenticationService.findAll();
     }
 
 
+    // @TODO to manage
     @GetMapping("/users/delete/{email}")
     public UserBas deleteUser(@PathVariable String email){
         UserBas user = authenticationService.findUser(email);

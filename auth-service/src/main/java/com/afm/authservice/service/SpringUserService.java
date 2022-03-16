@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class SpringUserService implements UserDetailsService {
     private final UserBasRepository userBasRepository;
 
+    // @TODO to manage
+
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserBas credentials = userBasRepository.findByEmail(email);
 

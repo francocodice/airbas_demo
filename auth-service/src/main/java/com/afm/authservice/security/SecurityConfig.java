@@ -26,15 +26,17 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final SpringUserService springUserService;
+    // @TODO to manage
 
-
-    //adding ADMIN in input
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-       auth.inMemoryAuthentication()
-               .withUser("ADMIN").password(bCryptPasswordEncoder.encode("ADMIN"))
-               .roles(ERole.ADMIN.name());
-    }
+    /**
+     * //adding ADMIN in input
+     *
+     * @Autowired public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+     * auth.inMemoryAuthentication()
+     * .withUser("ADMIN").password(bCryptPasswordEncoder.encode("ADMIN"))
+     * .roles(ERole.ADMIN.name());
+     * }
+     **/
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -61,7 +63,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
+    @Override
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf().disable()
+                .cors().and()
+                .authorizeRequests()
+                .antMatchers("/auth/**", "/oauth/**").permitAll()
+                .anyRequest().authenticated();
+    }
+}
+/**
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -81,3 +93,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 }
+**/
