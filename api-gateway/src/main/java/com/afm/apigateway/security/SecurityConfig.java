@@ -55,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/oauth/**",
                         "/api/profile/register",
                         "/api/flights/**",
-                        "/api/res/creates").permitAll()
+                        "/api/res/creates",
+                        "/api/**").permitAll()
                 //.antMatchers("/api/**").permitAll()
                 .anyRequest().authenticated();
 

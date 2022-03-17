@@ -90,11 +90,12 @@ public class FlightController {
 
     @PostMapping("/add")
     public List<Flight> addFlights(@RequestBody List<RequestAddFlight> flights){
+        List<Flight> addedFlight = new LinkedList<>();
         for(RequestAddFlight newFlight : flights) {
             AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
-            flightService.addFlight(newFlight, currentAirPlane.getName());
+            addedFlight.add(flightService.addFlight(newFlight, currentAirPlane.getName()));
         }
-        return null;
+        return addedFlight;
     }
 
 
