@@ -24,20 +24,11 @@ import java.util.List;
 public class ReservationController {
     private static Logger logger = LoggerFactory.getLogger(ReservationController.class);
     private final ReservationService reservationService;
-    private final RateRepository rateRepository;
-
-    @PostMapping("/create")
-    public Reservation createReservation(@RequestBody ReservationRequest request){
-        logger.info("Creation Reservation" );
-        System.out.println(request.toString());
-        return null;
-        //return reservationService.createReservation(request.getFlight(), request.getRate(), request.getPassenger(), request.getUsermail());
-    }
 
     @PostMapping("/creates")
     public List<Reservation> createReservations(@RequestBody List<ReservationRequest> requests){
         List<Reservation> tmp = new LinkedList<>();
-        logger.info("Creation Reservation" + requests.toArray().toString());
+        logger.info("Creation Reservations" );
         //System.out.println(request.toString());
         for (ReservationRequest request : requests){
             Passenger p = new Passenger();
@@ -51,32 +42,6 @@ public class ReservationController {
         }
         return tmp;
     }
-
-    @GetMapping("/addRates")
-    public HttpStatus addRates(){
-        Rate base = new Rate();
-        base.setType("BASE");
-        base.setPrice(new BigDecimal("10.00"));
-        rateRepository.save(base);
-
-        Rate plus = new Rate();
-        plus.setType("PLUS");
-        plus.setPrice(new BigDecimal("30.00"));
-        rateRepository.save(plus);
-
-        Rate premium = new Rate();
-        premium.setType("PREMIUM");
-        premium.setPrice(new BigDecimal("60.00"));
-        rateRepository.save(premium);
-        return HttpStatus.OK;
-    }
-
-    @GetMapping("/allRate")
-    public List<Rate> allRate(){
-        return rateRepository.findAll();
-
-    }
-
 
 
 }

@@ -4,10 +4,7 @@ import com.afm.reservationservice.repository.PassengerRepository;
 import com.afm.reservationservice.repository.RateRepository;
 import com.afm.reservationservice.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
-import model.flights.Flight;
-import model.prenotation.EnumRateType;
 import model.prenotation.Passenger;
-import model.prenotation.Rate;
 import model.prenotation.Reservation;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +14,6 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final RateRepository rateRepository;
     private final PassengerRepository passengerRepository;
 
     public Reservation createReservation(String flightName, String airPlaneName,
@@ -34,7 +30,6 @@ public class ReservationService {
 
         passengerRepository.save(passenger);
         reservation.setPassenger(passenger);
-
         //BigDecimal result = flight.getPrice().add(rate.getPrice());
         //reservation.setPrice( result);
         reservationRepository.save(reservation);

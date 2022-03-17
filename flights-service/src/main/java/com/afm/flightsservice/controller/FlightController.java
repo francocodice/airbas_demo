@@ -32,36 +32,24 @@ public class FlightController {
     @Autowired
     public RestTemplate restTemplate;
 
-    @GetMapping("/add")
-    public Flight addFlight(){
-        logger.info("Adding flight" );
-
-        // Spostare nell'API Gateway
-        List<RequestAddFlight> flights = restTemplate.exchange(
-                "http://127.0.0.1:5000/generate",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<RequestAddFlight>>() {}
-        ).getBody();
-
-        for(RequestAddFlight newFlight : flights){
-            AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
-            flightService.addFlight(newFlight, currentAirPlane.getName());
-        }
-        System.out.println();
-
-        return null;
-    }
-
+    // @DUBUG
     @GetMapping("/allFlights")
     public List<Flight> getAll(){
         return flightService.getAll();
     }
 
-    @PostMapping("/findByDepartureCity")
+    // @DUBUG
+    @PostMapping("/offers")
     public List<Flight> findByDepartureCity(@RequestBody RequestFlight request){
         return flightService.findByDepartureCity(request.getDepartureCity());
     }
+
+    // @DUBUG
+    @GetMapping("/allAirplane")
+    public List<AirPlane> getAllAirPlane(){
+        return airPlaneService.getAllAirplane();
+    }
+
 
     @PostMapping("/justGone")
     public List<Flight> findFlight(@RequestBody RequestFlight request){
@@ -85,11 +73,6 @@ public class FlightController {
         return flights;
     }
 
-    @GetMapping("/allAirplane")
-    public List<AirPlane> getAllAirPlane(){
-        return airPlaneService.getAllAirplane();
-    }
-
     @GetMapping("/getAirplane")
     public AirPlane getAirPlane(@RequestParam String name){
         return airPlaneService.getAirPlane(name);
@@ -105,7 +88,14 @@ public class FlightController {
         return airPlaneService.removeBookSeat(name, seatCord);
     }
 
-
+    @PostMapping("/add")
+    public List<Flight> addFlights(@RequestBody List<RequestAddFlight> flights){
+        for(RequestAddFlight newFlight : flights) {
+            AirPlane currentAirPlane = airPlaneService.addAirPlane(newFlight);
+            flightService.addFlight(newFlight, currentAirPlane.getName());
+        }
+        return null;
+    }
 
 
 }

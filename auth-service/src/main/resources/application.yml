@@ -9,9 +9,9 @@ server:
 
 spring:
   datasource:
-    password: 2801610a
+    password: password
     url: jdbc:postgresql://localhost:5432/airbas_auth
-    username: postgres
+    username: newuser
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate:

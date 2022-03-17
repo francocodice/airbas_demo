@@ -20,6 +20,9 @@ services:
   authentication:
     authAddress: http://localhost:8082
     profileAddress: http://localhost:8081
+  flights:
+    flightsAddress : http://localhost:8083
+    resAddress : http://localhost:8084
 
 server:
   port: 8080
