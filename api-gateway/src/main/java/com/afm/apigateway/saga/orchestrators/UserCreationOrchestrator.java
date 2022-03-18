@@ -28,14 +28,14 @@ public class UserCreationOrchestrator extends Orchestrator {
         return builder
                 .invoke(authService::createUser).addParam("credentials").saveTo("userDatailsData")
                 .withCompensation(authService::deleteUser)
-
                 .step()
+
                 .invoke(profileService::saveDetails).addParam("userDatailsData")
-
                 .step()
+
                 .invoke(authService::authenticateUserSaga).addParam("credentials").saveTo("currentUser")
-
                 .step()
+
                 .invoke(jwtService::generateJwt).addParam("currentUser").saveTo("jwt")
                 .build();
     }

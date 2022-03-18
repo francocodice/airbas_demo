@@ -1,49 +1,39 @@
 package com.afm.apigateway.saga.orchestrators;
 
 import com.afm.apigateway.saga.core.*;
-import com.afm.apigateway.security.jwt.JwtService;
-import com.afm.apigateway.service.AuthService;
-import com.afm.apigateway.service.FlightService;
-import com.afm.apigateway.service.ProfileService;
+import com.afm.apigateway.service.FlightsService;
+import com.afm.apigateway.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import model.auth.UserBas;
-import model.utils.UserPayload;
+import model.prenotation.Reservation;
+import model.utils.ReservationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class ReservationCreationOrchestrator extends Orchestrator {
-    private final FlightService flightService;
-    private final UserDetails userDetailsSerivice;
-    //private final ReservationService reservationService;
+    private final FlightsService flightsService;
+    private final ReservationService reservationService;
 
-    private static Logger logger = LoggerFactory.getLogger(UserCreationOrchestrator.class);
+    private static Logger logger = LoggerFactory.getLogger(ReservationCreationOrchestrator.class);
     @Override
     protected SagaDefinition buildSaga(SagaBuilder builder) {
-        /*logger.info("Prenotation creation saga");
+        logger.info("Reservation creation saga");
 
         return builder
-                .invoke(authService::createUser).addParam("reservationRequest").saveTo("userDatailsData")
-                .withCompensation(authService::deleteUser)
+                .invoke(reservationService::createReservationsGet).addParam("request").saveTo("reservationCreated")
 
                 .step()
-                .invoke(profileService::saveDetails).addParam("userDatailsData")
-
-                .step()
-                .invoke(authService::authenticateUserSaga).addParam("credentials").saveTo("currentUser")
-
-                .step()
-                .invoke(jwtService::generateJwt).addParam("currentUser").saveTo("jwt")
-                .build();*/
-        return null;
+                .invoke(flightsService::bookSeatRestMult).addParam("reservationCreated")
+                .build();
     }
 
-    public String createReservation(UserPayload credentials) throws Throwable, SagaException {
+    public List<Reservation> createReservation(List<ReservationRequest> request) throws Throwable, SagaException {
         SagaParamsResolver resolver = getExecutor()
-                .withArg("reservationRequest", credentials)
+                .withArg("request", request)
                 .run()
                 .collect();
-        return resolver.get("reservation");
+        return resolver.get("reservationCreated");
     }
 }

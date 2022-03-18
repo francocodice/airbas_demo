@@ -1,6 +1,5 @@
 package com.afm.reservationservice.controller;
 
-import com.afm.reservationservice.repository.RateRepository;
 import com.afm.reservationservice.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import model.prenotation.Passenger;
@@ -27,20 +26,20 @@ public class ReservationController {
 
     @PostMapping("/creates")
     public List<Reservation> createReservations(@RequestBody List<ReservationRequest> requests){
-        List<Reservation> tmp = new LinkedList<>();
+        List<Reservation> reservations = new LinkedList<>();
         logger.info("Creation Reservations" );
         //System.out.println(request.toString());
         for (ReservationRequest request : requests){
             Passenger p = new Passenger();
             // p.setBirthdate(request.getPassengerDate());
             p.setFirstname(request.getPassangerName());
-            p.setFirstname(request.getPassangerSurname());
+            p.setSecondname(request.getPassangerSurname());
             p.setTelephone(request.getPassangerPhone());
 
-            tmp.add(reservationService.createReservation(request.getFlightName(), request.getAirPlaneName(),
-                    request.getRate(), p, request.getUsermail()));
+            reservations.add(reservationService.createReservation(request.getFlightName(), request.getAirPlaneName(),
+                    request.getSeatCord(), request.getRate(), p, request.getUsermail()));
         }
-        return tmp;
+        return reservations;
     }
 
 

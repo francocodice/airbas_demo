@@ -3,17 +3,15 @@ package com.afm.flightsservice.controller;
 import com.afm.flightsservice.service.AirPlaneService;
 import com.afm.flightsservice.service.FlightService;
 import lombok.RequiredArgsConstructor;
-import model.auth.UserBas;
 import model.flights.AirPlane;
 import model.flights.Flight;
 import model.utils.RequestAddFlight;
 import model.utils.RequestFlight;
+import model.utils.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
@@ -81,6 +79,18 @@ public class FlightController {
     @GetMapping("/bookSeat")
     public AirPlane bookSeat(@RequestParam String name, @RequestParam String seatCord){
         return airPlaneService.addBookSeat(name, seatCord);
+    }
+
+    @PostMapping("/bookSeatMulti")
+    public List<AirPlane> bookSeatMulti(@RequestBody List<ReservationRequest> requests){
+        List<AirPlane> edited = new LinkedList<>();
+        for(ReservationRequest req : requests){
+            String name = req.getAirPlaneName();
+            String seatCord = req.getSeatCord();
+            System.out.println(name + seatCord);
+            edited.add(airPlaneService.addBookSeat(name, seatCord));
+        }
+        return edited;
     }
 
     @GetMapping("/removeBookSeat")

@@ -1,7 +1,6 @@
 package com.afm.reservationservice.service;
 
 import com.afm.reservationservice.repository.PassengerRepository;
-import com.afm.reservationservice.repository.RateRepository;
 import com.afm.reservationservice.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import model.prenotation.Passenger;
@@ -16,7 +15,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final PassengerRepository passengerRepository;
 
-    public Reservation createReservation(String flightName, String airPlaneName,
+    public Reservation createReservation(String flightName, String airPlaneName, String seatCord,
                                          String rateName, Passenger passenger, String userMail) {
         Reservation reservation = new Reservation();
         //Rate rate = rateRepository.findByType(rateName);
@@ -27,6 +26,7 @@ public class ReservationService {
         reservation.setPassenger(passenger);
         reservation.setUserEmail(userMail);
         reservation.setName("ASD");
+        reservation.setSeatCord(seatCord);
 
         passengerRepository.save(passenger);
         reservation.setPassenger(passenger);
