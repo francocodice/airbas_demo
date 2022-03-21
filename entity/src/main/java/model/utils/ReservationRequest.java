@@ -7,6 +7,8 @@ import model.prenotation.EnumRateType;
 import model.prenotation.Passenger;
 import model.prenotation.Rate;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class ReservationRequest {
@@ -18,5 +20,5 @@ public class ReservationRequest {
     private String passangerName;
     private String passangerSurname;
     private String passangerPhone;
-    // private String passengerDate;
+    private Date passengerDate;
 }

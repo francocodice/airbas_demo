@@ -47,7 +47,8 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest credential, HttpServletResponse response)  {
         UserBas currentUser = authService.authenticateUser(credential);
         String jwt = jwtService.generateJwt(currentUser);
-        response.setHeader(tokenHeader, jwt);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setValue(jwt);
         return new ResponseEntity(currentUser, HttpStatus.CREATED);
     }
 
@@ -56,7 +57,9 @@ public class AuthController {
     public ResponseEntity<?> signUp(@RequestBody UserPayload payload, HttpServletResponse response) throws Throwable {
         String jwt = userCreationSaga.createUser(payload);
         response.setHeader(tokenHeader,jwt);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setValue(jwt);
+        return new ResponseEntity<>(tokenDto, HttpStatus.CREATED);
     }
 
     @CrossOrigin

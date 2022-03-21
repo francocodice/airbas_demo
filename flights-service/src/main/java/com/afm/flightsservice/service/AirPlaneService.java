@@ -48,7 +48,6 @@ public class AirPlaneService {
         Map<String, Integer> seats = airPlane.getSeats();
         seats.put(seatCord,1);
         airPlane.setSeats(seats);
-
         airPlane.setAvailableSeats(airPlane.getAvailableSeats()-1);
         return airPlaneRepository.save(airPlane);
     }
@@ -58,6 +57,7 @@ public class AirPlaneService {
         Map<String, Integer> seats = airPlane.getSeats();
         seats.put(seatCord,0);
         airPlane.setSeats(seats);
+        airPlane.setAvailableSeats(airPlane.getAvailableSeats()+1);
         return airPlaneRepository.save(airPlane);
     }
 

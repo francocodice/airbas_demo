@@ -32,6 +32,11 @@ public class FlightController {
         return new ResponseEntity(flightList, HttpStatus.OK);
     }
 
+    @GetMapping("flights/cities")
+    public ResponseEntity<?> getCity()  {
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
     @GetMapping("/flights/{airplaneName}")
     public ResponseEntity<?> findAirplane(@PathVariable(name = "airplaneName") String airPlaneName)  {
         AirPlane airPlane = flightService.getAirplaneRest(airPlaneName);
